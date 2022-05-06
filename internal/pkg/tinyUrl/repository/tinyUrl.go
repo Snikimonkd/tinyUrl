@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"database/sql"
-
 	"github.com/jmoiron/sqlx"
 )
 
@@ -33,6 +31,9 @@ func (r *TinyUrlSQLRepository) Get(tinyUrl string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if len(fullUrl) == 0 {
+		return "", nil
+	}
 
 	return fullUrl[0], nil
 }
@@ -41,11 +42,10 @@ func (r *TinyUrlSQLRepository) CheckIfTinyUrlExist(tinyUrl string) (bool, error)
 	var buf []string
 	err := r.DB.Select(&buf, `SELECT tinyUrl FROM urls WHERE tinyurl = $1`, tinyUrl)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return false, nil
-		}
-
 		return false, err
+	}
+	if len(buf) == 0 {
+		return false, nil
 	}
 
 	return true, nil
@@ -53,13 +53,12 @@ func (r *TinyUrlSQLRepository) CheckIfTinyUrlExist(tinyUrl string) (bool, error)
 
 func (r *TinyUrlSQLRepository) CheckIfFullUrlExist(fullUrl string) (string, error) {
 	var buf []string
-	err := r.DB.Select(&buf, `SELECT tinyUrl FROM urls WHERE fullurl = $1`, fullUrl)
+	err := r.DB.Select(&buf, `SELECT tinyurl FROM urls WHERE fullurl = $1`, fullUrl)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return "", nil
-		}
-
 		return "", err
+	}
+	if len(buf) == 0 {
+		return "", nil
 	}
 
 	return buf[0], nil
@@ -75,7 +74,7 @@ func (r *TinyUrlInMemoryRepository) Get(tinyUrl string) (string, error) {
 	var url string
 	var ok bool
 	if url, ok = r.DB[tinyUrl]; !ok {
-		return "", sql.ErrNoRows
+		return "", nil
 	}
 
 	return url, nil

@@ -40,14 +40,14 @@ func (u *TinyUrlUseCase) Create(fullUrl string) (string, error) {
 	// Если сгенерировали уже существующий укороченный URL, то перегенерируем его
 	var tinyUrlStr string
 	for exist := true; exist == true; {
-		tinyUrlStr := u.generate()
+		tinyUrlStr = u.generate()
 		exist, err = u.Repository.CheckIfTinyUrlExist(tinyUrlStr)
 		if err != nil {
 			return "", nil
 		}
 	}
 
-	err = u.Repository.Create(tinyUrlStr, fullUrl)
+	err = u.Repository.Create(fullUrl, tinyUrlStr)
 	if err != nil {
 		return "", err
 	}
