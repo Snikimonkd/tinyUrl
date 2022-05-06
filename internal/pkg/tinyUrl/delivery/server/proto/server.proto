@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "github.com/Snikimonkd/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto/server.proto";
+
+message FullUrl {
+    string Val = 1;
+}
+
+message TinyUrl {
+    string Val = 1;
+}
+
+service TinyUrlServer {
+    rpc Create(FullUrl) returns (TinyUrl) {}
+    rpc Get(TinyUrl) returns (FullUrl) {}
+}
