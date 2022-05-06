@@ -10,7 +10,7 @@ type TinyUrlUseCase struct {
 }
 
 type TinyUrlUsecaseInterface interface {
-	Generate() models.URL
+	Generate() string
 	Create(url models.URL) (tinyUrl models.URL, err error)
 	Get(tinyUrl models.URL) (url models.URL, err error)
 }
