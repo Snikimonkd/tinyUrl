@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# proto files
+*.pb.go
+
+# go files
+go.mod
+go.sum

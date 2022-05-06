@@ -11,6 +11,8 @@ message TinyUrl {
 }
 
 service TinyUrlServer {
+    // создает укороченную ссылку
     rpc Create(FullUrl) returns (TinyUrl) {}
+    // по укороченной ссылке находит полную ссылку
     rpc Get(TinyUrl) returns (FullUrl) {}
 }
