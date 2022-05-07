@@ -23,10 +23,6 @@ func init() {
 	utils.MainLogger.Logger.Logger.SetOutput(ioutil.Discard)
 }
 
-type UsecaseMock struct {
-	usecase.TinyUrlUseCase
-}
-
 var tinyStr string = "0123456789"
 
 func GenerateMock() string {
@@ -36,7 +32,7 @@ func GenerateMock() string {
 func TestCreate_CheckIfFullUrlExist_Error(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
-	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
+	usecase := usecase.TinyUrlUseCase{Repository: dbMock}
 
 	handler := TinyUrlHandler{
 		Usecase: &usecase,
@@ -58,7 +54,7 @@ func TestCreate_CheckIfFullUrlExist_Error(t *testing.T) {
 func TestCreate_CheckIfFullUrlExist(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
-	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
+	usecase := usecase.TinyUrlUseCase{Repository: dbMock}
 
 	handler := TinyUrlHandler{
 		Usecase: &usecase,
@@ -80,7 +76,7 @@ func TestCreate_CheckIfFullUrlExist(t *testing.T) {
 func TestCreate_NotValidInput(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
-	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
+	usecase := usecase.TinyUrlUseCase{Repository: dbMock}
 
 	handler := TinyUrlHandler{
 		Usecase: &usecase,
@@ -100,11 +96,11 @@ func TestCreate_NotValidInput(t *testing.T) {
 func TestCreate(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
-	usecase := &UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
+	usecase := usecase.TinyUrlUseCase{Repository: dbMock}
 	usecase.Gen = GenerateMock
 
 	handler := TinyUrlHandler{
-		Usecase: usecase,
+		Usecase: &usecase,
 	}
 
 	fullUrl := server_proto.FullUrl{Val: "http://google.com/asdf"}
