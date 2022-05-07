@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"errors"
+	"io/ioutil"
 	"testing"
 
 	"context"
@@ -17,6 +18,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+func init() {
+	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
+	utils.MainLogger.Logger.Logger.SetOutput(ioutil.Discard)
+}
+
 type UsecaseMock struct {
 	usecase.TinyUrlUseCase
 }
@@ -28,7 +34,6 @@ func (u *UsecaseMock) generate() string {
 }
 
 func TestCreate_CheckIfFullUrlExist_Error(t *testing.T) {
-	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
 	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
@@ -51,7 +56,6 @@ func TestCreate_CheckIfFullUrlExist_Error(t *testing.T) {
 }
 
 func TestCreate_CheckIfFullUrlExist(t *testing.T) {
-	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
 	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
@@ -74,7 +78,6 @@ func TestCreate_CheckIfFullUrlExist(t *testing.T) {
 }
 
 func TestCreate_NotValidInput(t *testing.T) {
-	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
 	mockCtrl := gomock.NewController(t)
 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
 	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
