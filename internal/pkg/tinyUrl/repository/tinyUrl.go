@@ -13,7 +13,7 @@ type TinyUrlInMemoryRepository struct {
 }
 
 type TinyUrlRepositoryInterface interface {
-	Create(tinyUrl, fullUrl string) error
+	Create(fullUrl, tinyUrl string) error
 	Get(tinyUrl string) (string, error)
 	CheckIfFullUrlExist(fullUrl string) (string, error)
 	CheckIfTinyUrlExist(tinyUrl string) (bool, error)
