@@ -30,7 +30,7 @@
 protoc --go_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go_opt=paths=source_relative --go-grpc_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go-grpc_opt=paths=source_relative /home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto/server.proto --proto_path=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto
 ```
 
-Собрать доке образ:
+Собрать докер образ:
 
 ```bash
 sudo docker build -t tinyurl .

@@ -4,6 +4,7 @@ import (
 	"context"
 	"math/rand"
 	"net"
+	"os"
 	"time"
 
 	"github.com/Snikimonkd/tinyUrl/internal/pkg/tinyUrl/delivery"
@@ -60,8 +61,21 @@ func main() {
 	ServerInterceptor := ServerInterceptor{utils.MainLogger}
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(ServerInterceptor.logger))
 
+	var currentDB repository.TinyUrlRepositoryInterface
+
+	buf := os.Getenv("DB")
+	utils.MainLogger.LogInfo(buf)
+
+	if os.Getenv("DB") == "NOSQL" {
+		currentDB = &repository.TinyUrlInMemoryRepository{DB: make(map[string]string)}
+		utils.MainLogger.LogInfo("Current build uses NO SQL database")
+	} else {
+		currentDB = &repository.TinyUrlSQLRepository{DB: tinyUrl.Init()}
+		utils.MainLogger.LogInfo("Current build uses SQL database")
+	}
+
 	tinyUrlServer := delivery.TinyUrlHandler{
-		Usecase: &usecase.TinyUrlUseCase{Repository: &repository.TinyUrlSQLRepository{DB: tinyUrl.Init()}},
+		Usecase: &usecase.TinyUrlUseCase{Repository: currentDB},
 	}
 
 	server.RegisterTinyUrlServerServer(grpcServer, &tinyUrlServer)

@@ -16,7 +16,3 @@
 
 # proto files
 *.pb.go
-
-# go files
-go.mod
-go.sum
