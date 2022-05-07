@@ -3,9 +3,14 @@ package usecase
 import (
 	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/Snikimonkd/tinyUrl/internal/pkg/tinyUrl/repository"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 type TinyUrlUseCase struct {
 	Repository repository.TinyUrlRepositoryInterface
