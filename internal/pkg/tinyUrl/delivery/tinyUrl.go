@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"context"
-	"strings"
 
 	_ "github.com/jackc/pgx"
 
@@ -27,7 +26,7 @@ type TinyUrlHandlerInterface interface {
 func (h *TinyUrlHandler) Create(ctx context.Context, fullUrl *server.FullUrl) (*server.TinyUrl, error) {
 	ok := govalidator.IsURL(fullUrl.Val)
 	if !ok {
-		utils.MainLogger.LogError(status.Error(codes.InvalidArgument, "URL is not valid"))
+		utils.MainLogger.LogInfo(status.Error(codes.InvalidArgument, "URL is not valid"))
 		return nil, status.Error(codes.InvalidArgument, "URL is not valid")
 	}
 
@@ -42,15 +41,19 @@ func (h *TinyUrlHandler) Create(ctx context.Context, fullUrl *server.FullUrl) (*
 }
 
 func (h *TinyUrlHandler) Get(ctx context.Context, tinyUrl *server.TinyUrl) (*server.FullUrl, error) {
-	trimedUrl := strings.TrimLeft(tinyUrl.Val, "http://")
+	ok := govalidator.IsURL(tinyUrl.Val)
+	if !ok {
+		utils.MainLogger.Logger.Infoln(status.Error(codes.InvalidArgument, "URL is not valid"))
+		return nil, status.Error(codes.InvalidArgument, "URL is not valid")
+	}
 
-	res, err := h.Usecase.Get(trimedUrl)
+	res, err := h.Usecase.Get(tinyUrl.Val)
 	if err != nil {
 		utils.MainLogger.LogError(status.Error(codes.Internal, "Server error:"+err.Error()))
 		return nil, status.Error(codes.Internal, "Server error:"+err.Error())
 	}
 	if res == "" {
-		utils.MainLogger.LogError(status.Error(codes.NotFound, "Can`t find URL:"+tinyUrl.Val))
+		utils.MainLogger.LogInfo(status.Error(codes.NotFound, "Can`t find URL:"+tinyUrl.Val))
 		return nil, status.Error(codes.NotFound, "Can`t find URL:"+tinyUrl.Val)
 	}
 

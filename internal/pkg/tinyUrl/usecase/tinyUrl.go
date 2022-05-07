@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"math/rand"
+	"strings"
 
 	"github.com/Snikimonkd/tinyUrl/internal/pkg/tinyUrl/repository"
 )
@@ -34,7 +35,7 @@ func (u *TinyUrlUseCase) Create(fullUrl string) (string, error) {
 		return "", err
 	}
 	if tinyUrl != "" {
-		return ("http://" + tinyUrl), nil
+		return ("http://my.domain.com/" + tinyUrl), nil
 	}
 
 	// Если сгенерировали уже существующий укороченный URL, то перегенерируем его
@@ -52,11 +53,13 @@ func (u *TinyUrlUseCase) Create(fullUrl string) (string, error) {
 		return "", err
 	}
 
-	return ("http://" + tinyUrlStr), nil
+	return ("http://my.domain.com/" + tinyUrlStr), nil
 }
 
 func (u *TinyUrlUseCase) Get(tinyUrl string) (string, error) {
-	fullUrl, err := u.Repository.Get(tinyUrl)
+	trimedUrl := strings.TrimLeft(tinyUrl, "http://my.domain.com/")
+
+	fullUrl, err := u.Repository.Get(trimedUrl)
 	if err != nil {
 		return "", err
 	}

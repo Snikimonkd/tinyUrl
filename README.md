@@ -22,8 +22,22 @@
 
 * предпочтительней использовать postgresql
 
+# Иснтрукция к запуску
+
 Генерация фалов протобафа:
 
 ``` bash
 protoc --go_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go_opt=paths=source_relative --go-grpc_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go-grpc_opt=paths=source_relative /home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto/server.proto --proto_path=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto
+```
+
+Собрать доке образ:
+
+```bash
+sudo docker build -t tinyurl .
+```
+
+Запустить докер контейнер:
+
+```bash
+sudo docker run -d --name tinyurlname -p 5000:5000 tinyurl
 ```
