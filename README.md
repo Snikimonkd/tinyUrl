@@ -24,10 +24,16 @@
 
 # Иснтрукция к запуску
 
-Генерация фалов протобафа:
+Генерация файлов протобафа:
 
 ``` bash
 protoc --go_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go_opt=paths=source_relative --go-grpc_out=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server --go-grpc_opt=paths=source_relative /home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto/server.proto --proto_path=/home/sniki/myProjects/tinyUrl/internal/pkg/tinyUrl/delivery/server/proto
+```
+
+Генерация моков :
+
+```bash
+/home/sniki/go/bin/mockgen -source=./internal/pkg/tinyUrl/usecase/tinyUrl.go -destination=./internal/pkg/tinyUrl/usecase/mocks/tinyUrl_mock.go
 ```
 
 Сборка с sql базой данных:
