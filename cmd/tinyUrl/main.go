@@ -63,10 +63,7 @@ func main() {
 
 	var currentDB repository.TinyUrlRepositoryInterface
 
-	buf := os.Getenv("DB")
-	utils.MainLogger.LogInfo(buf)
-
-	if os.Getenv("DB") == "NOSQL" {
+	if os.Getenv("DB") == "INMEM" {
 		currentDB = &repository.TinyUrlInMemoryRepository{DB: make(map[string]string)}
 		utils.MainLogger.LogInfo("Current build uses NO SQL database")
 	} else {

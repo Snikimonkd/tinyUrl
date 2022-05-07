@@ -1,0 +1,4 @@
+DROP INDEX IF EXISTS index_fullurl;
+DROP INDEX IF EXISTS index_tinyurl;
+
+DROP TABLE IF EXISTS urls;
