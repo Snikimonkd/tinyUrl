@@ -71,8 +71,10 @@ func main() {
 		utils.MainLogger.LogInfo("Current build uses SQL database")
 	}
 
+	useCase := usecase.TinyUrlUseCase{Repository: currentDB}
+	useCase.Gen = usecase.Generate
 	tinyUrlServer := delivery.TinyUrlHandler{
-		Usecase: &usecase.TinyUrlUseCase{Repository: currentDB},
+		Usecase: &useCase,
 	}
 
 	server.RegisterTinyUrlServerServer(grpcServer, &tinyUrlServer)

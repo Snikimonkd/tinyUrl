@@ -9,17 +9,17 @@ import (
 
 type TinyUrlUseCase struct {
 	Repository repository.TinyUrlRepositoryInterface
+	Gen        func() string
 }
 
 type TinyUrlUsecaseInterface interface {
-	generate() string
 	Create(fullUrl string) (string, error)
 	Get(tinyUrl string) (string, error)
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
 
-func (u *TinyUrlUseCase) generate() string {
+func Generate() string {
 	randStr := make([]rune, 10)
 	for i := 0; i < len(randStr); i++ {
 		randStr[i] = letterRunes[rand.Intn(len(letterRunes))]
@@ -41,7 +41,7 @@ func (u *TinyUrlUseCase) Create(fullUrl string) (string, error) {
 	// Если сгенерировали уже существующий укороченный URL, то перегенерируем его
 	var tinyUrlStr string
 	for exist := true; exist == true; {
-		tinyUrlStr = u.generate()
+		tinyUrlStr = u.Gen()
 		exist, err = u.Repository.CheckIfTinyUrlExist(tinyUrlStr)
 		if err != nil {
 			return "", nil
