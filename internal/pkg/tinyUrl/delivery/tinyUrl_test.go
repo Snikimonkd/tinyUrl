@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	"context"
@@ -95,27 +94,27 @@ func TestCreate_NotValidInput(t *testing.T) {
 	assert.Equal(t, expected, res)
 }
 
-func TestCreate(t *testing.T) {
-	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
-	mockCtrl := gomock.NewController(t)
-	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
-	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
+// func TestCreate(t *testing.T) {
+// 	utils.MainLogger = &utils.Logger{Logger: logrus.NewEntry(logrus.StandardLogger())}
+// 	mockCtrl := gomock.NewController(t)
+// 	dbMock := mocks.NewMockTinyUrlRepositoryInterface(mockCtrl)
+// 	usecase := UsecaseMock{TinyUrlUseCase: usecase.TinyUrlUseCase{Repository: dbMock}}
 
-	handler := TinyUrlHandler{
-		Usecase: &usecase,
-	}
+// 	handler := TinyUrlHandler{
+// 		Usecase: &usecase,
+// 	}
 
-	fmt.Println(usecase.generate())
+// 	fmt.Println(usecase.generate())
 
-	fullUrl := server_proto.FullUrl{Val: "http://google.com/asdf"}
-	ctx := context.Background()
+// 	fullUrl := server_proto.FullUrl{Val: "http://google.com/asdf"}
+// 	ctx := context.Background()
 
-	dbMock.EXPECT().CheckIfFullUrlExist(fullUrl.Val).Return("", nil)
-	dbMock.EXPECT().CheckIfTinyUrlExist(tinyStr).Return(false, nil)
-	dbMock.EXPECT().Create(fullUrl.Val, tinyStr).Return(nil)
+// 	dbMock.EXPECT().CheckIfFullUrlExist(fullUrl.Val).Return("", nil)
+// 	dbMock.EXPECT().CheckIfTinyUrlExist(tinyStr).Return(false, nil)
+// 	dbMock.EXPECT().Create(fullUrl.Val, tinyStr).Return(nil)
 
-	res, err := handler.Create(ctx, &fullUrl)
+// 	res, err := handler.Create(ctx, &fullUrl)
 
-	assert.Equal(t, nil, err)
-	assert.Equal(t, tinyStr, res.Val)
-}
+// 	assert.Equal(t, nil, err)
+// 	assert.Equal(t, tinyStr, res.Val)
+// }
