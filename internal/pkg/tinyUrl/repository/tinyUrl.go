@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"sync"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -9,6 +11,7 @@ type TinyUrlSQLRepository struct {
 }
 
 type TinyUrlInMemoryRepository struct {
+	m  sync.Mutex
 	DB map[string]string
 }
 
@@ -65,6 +68,8 @@ func (r *TinyUrlSQLRepository) CheckIfFullUrlExist(fullUrl string) (string, erro
 }
 
 func (r *TinyUrlInMemoryRepository) Create(fullUrl, tinyUrl string) error {
+	r.m.Lock()
+	defer r.m.Unlock()
 	r.DB[tinyUrl] = fullUrl
 
 	return nil
@@ -73,6 +78,9 @@ func (r *TinyUrlInMemoryRepository) Create(fullUrl, tinyUrl string) error {
 func (r *TinyUrlInMemoryRepository) Get(tinyUrl string) (string, error) {
 	var url string
 	var ok bool
+
+	r.m.Lock()
+	defer r.m.Unlock()
 	if url, ok = r.DB[tinyUrl]; !ok {
 		return "", nil
 	}
@@ -81,6 +89,8 @@ func (r *TinyUrlInMemoryRepository) Get(tinyUrl string) (string, error) {
 }
 
 func (r *TinyUrlInMemoryRepository) CheckIfTinyUrlExist(tinyUrl string) (bool, error) {
+	r.m.Lock()
+	defer r.m.Unlock()
 	if _, ok := r.DB[tinyUrl]; !ok {
 		return false, nil
 	}
@@ -89,6 +99,8 @@ func (r *TinyUrlInMemoryRepository) CheckIfTinyUrlExist(tinyUrl string) (bool, e
 }
 
 func (r *TinyUrlInMemoryRepository) CheckIfFullUrlExist(fullUrl string) (string, error) {
+	r.m.Lock()
+	defer r.m.Unlock()
 	for key, val := range r.DB {
 		if val == fullUrl {
 			return key, nil
